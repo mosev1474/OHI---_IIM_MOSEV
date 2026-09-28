@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>_IIM_MOSEV | تحميل الجداول</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📥</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#1c2a2e; --bg2:#243539; --card:#2b3f44; --line:#3d565c;
+  --text:#eef3f1; --muted:#9fb5b3; --accent:#8fc9b8; --accent-d:#5fa896; --ink:#12201f;
+}
+*{box-sizing:border-box;margin:0}
+html,body{min-height:100%}
+body{
+  font-family:'Cairo',system-ui,'Segoe UI',Tahoma,sans-serif;
+  color:var(--text);
+  background:radial-gradient(1200px 600px at 80% -10%,#2f4a4d 0%,transparent 60%),
+             radial-gradient(900px 500px at 0% 110%,#2a4144 0%,transparent 55%),var(--bg);
+  display:flex;align-items:center;justify-content:center;padding:24px;position:relative;overflow-x:hidden;
+}
+/* العلامة المائية في كل حتة */
+body::before{
+  content:"_IIM_MOSEV  _IIM_MOSEV  _IIM_MOSEV  _IIM_MOSEV  _IIM_MOSEV  _IIM_MOSEV  _IIM_MOSEV  _IIM_MOSEV";
+  position:fixed;inset:-50%;
+  font:800 28px/3.2 'Cairo',sans-serif;letter-spacing:6px;direction:ltr;
+  color:rgba(143,201,184,.055);transform:rotate(-18deg);
+  word-spacing:24px;white-space:normal;pointer-events:none;z-index:0;
+}
+main{
+  position:relative;z-index:1;width:100%;max-width:520px;
+  background:linear-gradient(180deg,var(--card),var(--bg2));
+  border:1px solid var(--line);border-radius:22px;padding:34px 28px 26px;
+  box-shadow:0 24px 60px rgba(0,0,0,.35);
+}
+.brand{
+  direction:ltr;text-align:center;font-weight:800;font-size:2rem;letter-spacing:3px;
+  color:var(--accent);
+}
+.sub{text-align:center;color:var(--muted);margin:4px 0 26px;font-size:.98rem}
+h2{font-size:1.05rem;font-weight:600;margin:0 0 12px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px}
+.grid button,.cat button{
+  font:inherit;font-weight:600;cursor:pointer;color:var(--text);
+  background:var(--bg2);border:1.5px solid var(--line);border-radius:12px;padding:14px 0;
+  transition:background .15s,border-color .15s,color .15s,transform .1s;
+}
+.grid button:hover,.cat button:hover{border-color:var(--accent-d)}
+.grid button:active,.cat button:active{transform:scale(.96)}
+.grid button[aria-pressed="true"],.cat button[aria-pressed="true"]{
+  background:var(--accent);color:var(--ink);border-color:var(--accent);
+}
+.cat{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:26px}
+.cat button{font-size:1.4rem;padding:16px 0}
+#dl{
+  width:100%;font:inherit;font-weight:800;font-size:1.1rem;cursor:pointer;border:0;border-radius:14px;
+  padding:16px;background:var(--accent);color:var(--ink);
+  transition:background .15s,opacity .15s,transform .1s;
+}
+#dl:hover:not(:disabled){background:#a3d6c7}
+#dl:active:not(:disabled){transform:scale(.98)}
+#dl:disabled{opacity:.35;cursor:not-allowed}
+#msg{min-height:1.5em;text-align:center;color:var(--muted);margin-top:12px;font-size:.92rem}
+footer{direction:ltr;text-align:center;margin-top:20px;padding-top:16px;border-top:1px solid var(--line);
+  color:var(--muted);font-size:.8rem;letter-spacing:2px}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+@media (max-width:420px){main{padding:26px 18px 20px}.brand{font-size:1.6rem}}
+</style>
+</head>
+<body>
+<main>
+  <div class="brand">_IIM_MOSEV</div>
+  <p class="sub">اختار مجموعتك والفئة وحمّل جدولك</p>
+
+  <h2>المجموعة</h2>
+  <div class="grid" id="groups"></div>
+
+  <h2>الفئة</h2>
+  <div class="cat" id="cats">
+    <button type="button" data-c="A" aria-pressed="false">A</button>
+    <button type="button" data-c="B" aria-pressed="false">B</button>
+  </div>
+
+  <button id="dl" type="button" disabled>تنزيل</button>
+  <div id="msg" role="status"></div>
+  <footer>_IIM_MOSEV</footer>
+</main>
+
+<script>
+let group=null, cat=null;
+const $=id=>document.getElementById(id), msg=$('msg'), dl=$('dl');
+
+// أزرار المجموعات 1 - 7
+for(let i=1;i<=7;i++){
+  const b=document.createElement('button');
+  b.type='button';b.textContent=i;b.setAttribute('aria-pressed','false');
+  b.onclick=()=>{group=i;mark('#groups button',b);update()};
+  $('groups').appendChild(b);
+}
+document.querySelectorAll('#cats button').forEach(b=>{
+  b.onclick=()=>{cat=b.dataset.c;mark('#cats button',b);update()};
+});
+function mark(sel,active){
+  document.querySelectorAll(sel).forEach(x=>x.setAttribute('aria-pressed',x===active));
+}
+function update(){
+  dl.disabled=!(group&&cat);
+  msg.textContent=(group&&cat)?`الملف: ${group}${cat}.jpg`:'';
+}
+
+// التنزيل المباشر
+dl.onclick=async()=>{
+  const name=`${group}${cat}.jpg`;
+  msg.textContent='جاري التنزيل...';
+  try{
+    const r=await fetch(name);
+    if(!r.ok) throw 0;
+    const url=URL.createObjectURL(await r.blob());
+    const a=document.createElement('a');
+    a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),2000);
+    msg.textContent='تم التنزيل ✓';
+  }catch(e){
+    msg.textContent=`مش لاقي ${name} — اتأكد إنه مرفوع جنب index.html`;
+  }
+};
+</script>
+</body>
+</html>
